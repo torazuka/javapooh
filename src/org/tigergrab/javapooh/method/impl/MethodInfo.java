@@ -34,18 +34,8 @@ public class MethodInfo {
 	public int getAttributes(final byte[] bytes,
 			final Map<Integer, ConstantInfo> constantPool,
 			final int attributesCount, final int cursor) {
-		int currentCursor = cursor;
-		int count = 1;
-		for (;;) {
-			if (count < attributesCount + 1) {
-				AttributeControl control = new AttributeControl(bytes,
-						attributesCount, constantPool);
-				currentCursor = control.getInfo(currentCursor);
-				count++;
-				continue;
-			}
-			break;
-		}
-		return currentCursor;
+		AttributeControl control = new AttributeControl(bytes,
+				attributesCount, constantPool);
+		return control.getInfo(cursor);
 	}
 }
