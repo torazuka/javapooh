@@ -56,7 +56,9 @@ public class AttributeControl {
 
 	protected AttributeInfo selectAttributeKind(final AttributeKind attrKind) {
 		AttributeInfo result = null;
-		if (attrKind.equals(AttributeKind.ConstantValue)) {
+		if (attrKind == null) {
+			result = new Unknown();
+		} else if (attrKind.equals(AttributeKind.ConstantValue)) {
 			result = new ConstantValue();
 		} else if (attrKind.equals(AttributeKind.Synthetic)) {
 			result = new Synthetic();
