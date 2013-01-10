@@ -15,7 +15,15 @@ public enum AttributeItem {
 			ItemType.u2), index(ItemType.u2), number_of_classes(ItemType.u2), inner_class_info_index(
 			ItemType.u2), outer_class_info_index(ItemType.u2), inner_name_index(
 			ItemType.u2), innner_class_access_flags(ItemType.u2), source_file_index(
-			ItemType.u2);
+			ItemType.u2), class_index(ItemType.u2), method_index(ItemType.u2), signature_index(
+			ItemType.u2), debug_extension(ItemType.u1), num_annotations(
+			ItemType.u2), type_index(ItemType.u2), num_element_value_pairs(
+			ItemType.u2), element_name_index(ItemType.u2), tag(ItemType.u1), const_value_index(
+			ItemType.u2), type_name_index(ItemType.u2), const_name_index(
+			ItemType.u2), class_info_index(ItemType.u2), num_value(ItemType.u2), num_parameters(
+			ItemType.u1), num_bootstrap_methods(ItemType.u2), bootstrap_method_ref(
+			ItemType.u2), num_bootstrap_arguments(ItemType.u2), bootstrap_argument(
+			ItemType.u2), local_variable_type_table_length(ItemType.u2);
 
 	protected ItemType type;
 

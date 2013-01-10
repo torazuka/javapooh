@@ -57,25 +57,15 @@ public class AttributeControl {
 	protected AttributeInfo selectAttributeKind(final AttributeKind attrKind) {
 		AttributeInfo result = null;
 		if (attrKind == null) {
-			result = new Unknown();
-		} else if (attrKind.equals(AttributeKind.ConstantValue)) {
-			result = new ConstantValue();
-		} else if (attrKind.equals(AttributeKind.Synthetic)) {
-			result = new Synthetic();
-		} else if (attrKind.equals(AttributeKind.Deprecated)) {
-			result = new Deprecated();
-		} else if (attrKind.equals(AttributeKind.Code)) {
-			result = new Code(constantPool);
-		} else if (attrKind.equals(AttributeKind.Exceptions)) {
-			result = new Exceptions();
-		} else if (attrKind.equals(AttributeKind.LineNumberTable)) {
-			result = new LineNumberTable();
-		} else if (attrKind.equals(AttributeKind.LocalVariableTable)) {
-			result = new LocalVariableTable();
-		} else if (attrKind.equals(AttributeKind.InnerClasses)) {
-			result = new InnerClasses();
-		} else if (attrKind.equals(AttributeKind.SourceFile)) {
-			result = new SourceFile();
+			return new Unknown();
+		}
+
+		EnumSet<AttributeKind> allAttribute = EnumSet
+				.allOf(AttributeKind.class);
+		for (AttributeKind attr : allAttribute) {
+			if (attrKind.equals(attr)) {
+				result = attr.make(constantPool);
+			}
 		}
 		return result;
 	}
@@ -101,6 +91,8 @@ public class AttributeControl {
 				return attr;
 			}
 		}
+
+		logger.debug("debug: " + string);
 		return null;
 	}
 }

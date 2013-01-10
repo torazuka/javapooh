@@ -8,6 +8,7 @@ public class Unknown extends DefaultAttribute {
 	private static class ParseResult {
 		final Element element;
 		final int next;
+
 		ParseResult(final Element element, final int next) {
 			this.element = element;
 			this.next = next;
@@ -16,27 +17,25 @@ public class Unknown extends DefaultAttribute {
 
 	private final PromptView view = new PromptView();
 
-	private ParseResult parse(
-		final byte[] bytes, final int position, final AttributeItem item
-	) {
+	private ParseResult parse(final byte[] bytes, final int position,
+			final AttributeItem item) {
 		final Element element = getData(bytes, position, new Element(item));
 		return new ParseResult(element, position + item.size());
 	}
 
 	@Override
 	public int getInfo(final byte[] bytes, final int cursor) {
-		final ParseResult attrNameIndex =
-		              parse(bytes, cursor, AttributeItem.attribute_name_index);
+		final ParseResult attrNameIndex = parse(bytes, cursor,
+				AttributeItem.attribute_name_index);
 		attrNameIndex.element.setComment("UNKNOWN");
 		view.printElement(attrNameIndex.element);
 
-		final ParseResult attrLength =
-		      parse(bytes, attrNameIndex.next, AttributeItem.attribute_length);
+		final ParseResult attrLength = parse(bytes, attrNameIndex.next,
+				AttributeItem.attribute_length);
 		view.printElement(attrLength.element);
 
 		final int skipLength = Integer.parseInt(
-			Util.byteToString(attrLength.element.getBytes()), 16
-		);
+				Util.byteToString(attrLength.element.getBytes()), 16);
 
 		return attrLength.next + skipLength;
 	}
