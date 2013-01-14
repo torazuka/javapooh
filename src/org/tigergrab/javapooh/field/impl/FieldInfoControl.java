@@ -3,8 +3,9 @@ package org.tigergrab.javapooh.field.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.tigergrab.javapooh.ClassItem;
 import org.tigergrab.javapooh.cp.ConstantInfo;
-import org.tigergrab.javapooh.impl.Item;
+import org.tigergrab.javapooh.field.FieldItem;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -25,19 +26,19 @@ public class FieldInfoControl {
 	}
 
 	public int getFieldInfo(final int cursor) {
-		view.printBegin(Item.fields.name());
+		view.printBegin(ClassItem.fields.name());
 		int counter = 1;
 		int currentCursor = cursor;
 		for (;;) {
 			if (counter < entryNum + 1) {
-				view.printCounter(counter, Item.fields.name());
+				view.printCounter(counter, ClassItem.fields.name());
 				currentCursor = getNextField(fieldsBytes, currentCursor);
 				counter++;
 				continue;
 			}
 			break;
 		}
-		view.printEnd(Item.fields.name());
+		view.printEnd(ClassItem.fields.name());
 		return currentCursor;
 	}
 

@@ -2,7 +2,7 @@ package org.tigergrab.javapooh.attr.value.impl;
 
 import java.util.EnumSet;
 
-import org.tigergrab.javapooh.attr.impl.AttributeItem;
+import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.attr.value.ElementValueTag;
 import org.tigergrab.javapooh.attr.value.Value;
 import org.tigergrab.javapooh.impl.Util;

@@ -1,9 +1,6 @@
 package org.tigergrab.javapooh.view.impl;
 
-import org.tigergrab.javapooh.attr.impl.AttributeItem;
-import org.tigergrab.javapooh.field.impl.FieldItem;
-import org.tigergrab.javapooh.impl.Item;
-import org.tigergrab.javapooh.method.impl.MethodItem;
+import org.tigergrab.javapooh.Item;
 
 public class Element {
 	protected String type;
@@ -19,24 +16,6 @@ public class Element {
 	}
 
 	public Element(final Item it) {
-		type = it.type();
-		item = it.name();
-		size = it.size();
-	}
-
-	public Element(final FieldItem it) {
-		type = it.type();
-		item = it.name();
-		size = it.size();
-	}
-
-	public Element(final MethodItem it) {
-		type = it.type();
-		item = it.name();
-		size = it.size();
-	}
-
-	public Element(final AttributeItem it) {
 		type = it.type();
 		item = it.name();
 		size = it.size();

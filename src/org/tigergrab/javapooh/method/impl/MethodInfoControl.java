@@ -3,9 +3,10 @@ package org.tigergrab.javapooh.method.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.tigergrab.javapooh.ClassItem;
 import org.tigergrab.javapooh.cp.ConstantInfo;
-import org.tigergrab.javapooh.impl.Item;
 import org.tigergrab.javapooh.impl.Util;
+import org.tigergrab.javapooh.method.MethodItem;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
 
@@ -25,19 +26,19 @@ public class MethodInfoControl {
 	}
 
 	public int getMethodInfo(final int cursor) {
-		view.printBegin(Item.methods.name());
+		view.printBegin(ClassItem.methods.name());
 		int counter = 1;
 		int currentCursor = cursor;
 		for (;;) {
 			if (counter < entryNum + 1) {
-				view.printCounter(counter, Item.methods.name());
+				view.printCounter(counter, ClassItem.methods.name());
 				currentCursor = getNextMethod(fieldsBytes, currentCursor);
 				counter++;
 				continue;
 			}
 			break;
 		}
-		view.printEnd(Item.methods.name());
+		view.printEnd(ClassItem.methods.name());
 		return currentCursor;
 	}
 

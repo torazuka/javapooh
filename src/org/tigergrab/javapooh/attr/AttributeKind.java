@@ -1,8 +1,26 @@
-package org.tigergrab.javapooh.attr.impl;
+package org.tigergrab.javapooh.attr;
 
 import java.util.Map;
 
-import org.tigergrab.javapooh.attr.AttributeInfo;
+import org.tigergrab.javapooh.attr.impl.AnnotationDefault;
+import org.tigergrab.javapooh.attr.impl.BootstrapMethods;
+import org.tigergrab.javapooh.attr.impl.Code;
+import org.tigergrab.javapooh.attr.impl.ConstantValue;
+import org.tigergrab.javapooh.attr.impl.Deprecated;
+import org.tigergrab.javapooh.attr.impl.EnclosingMethod;
+import org.tigergrab.javapooh.attr.impl.Exceptions;
+import org.tigergrab.javapooh.attr.impl.InnerClasses;
+import org.tigergrab.javapooh.attr.impl.LineNumberTable;
+import org.tigergrab.javapooh.attr.impl.LocalVariableTable;
+import org.tigergrab.javapooh.attr.impl.LocalVariableTypeTable;
+import org.tigergrab.javapooh.attr.impl.RuntimeInvisibleAnnotations;
+import org.tigergrab.javapooh.attr.impl.RuntimeInvisibleParameterAnnotations;
+import org.tigergrab.javapooh.attr.impl.RuntimeVisibleAnnotations;
+import org.tigergrab.javapooh.attr.impl.RuntimeVisibleParameterAnnotations;
+import org.tigergrab.javapooh.attr.impl.Signature;
+import org.tigergrab.javapooh.attr.impl.SourceDebugExtension;
+import org.tigergrab.javapooh.attr.impl.SourceFile;
+import org.tigergrab.javapooh.attr.impl.Synthetic;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 
 public enum AttributeKind {

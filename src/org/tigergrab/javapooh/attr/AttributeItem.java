@@ -1,8 +1,9 @@
-package org.tigergrab.javapooh.attr.impl;
+package org.tigergrab.javapooh.attr;
 
-import org.tigergrab.javapooh.impl.ItemType;
+import org.tigergrab.javapooh.Item;
+import org.tigergrab.javapooh.ItemType;
 
-public enum AttributeItem {
+public enum AttributeItem implements Item {
 	attribute_name_index(ItemType.u2), attribute_length(ItemType.u4), constantvalue_index(
 			ItemType.u2), max_stack(ItemType.u2), max_locals(ItemType.u2), code_length(
 			ItemType.u4), code(ItemType.u1), exception_table_length(ItemType.u2), exception_table(

@@ -1,39 +1,42 @@
 package org.tigergrab.javapooh.cp.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.cp.CpInfoTag;
+import org.tigergrab.javapooh.cp.CpItem;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
+import org.tigergrab.javapooh.view.impl.PromptView;
 
 /**
  * u1 tag; u4 bytes;
  */
 public class FloatInfo implements ConstantInfo {
 
-	protected final int BYTES_SIZE = 4;
+	protected final PromptView view = new PromptView();
 
-	protected byte[] bt = new byte[BYTES_SIZE];
-	protected float fbt = 0f;
+	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
 
 	@Override
-	public int getMovedCursor(final int cursor) {
-		return cursor + BYTES_SIZE;
+	public Element getData(final byte[] byts, final int cursor,
+			final Element ele) {
+		return defaultInfo.getData(byts, cursor, ele);
 	}
 
 	@Override
-	public void getInfo(final byte[] bytes, final int cursor) {
-		getBytes(bytes, cursor);
+	public int getContents(final byte[] bytes, final int cursor) {
+		int currentCursor = cursor;
 
-	}
+		Element tagElement = getData(bytes, currentCursor, new Element(
+				CpItem.tag));
+		tagElement.setComment(CpInfoTag.Constant_Float.name());
+		view.printElement(tagElement);
+		currentCursor += CpItem.tag.size();
 
-	protected void getBytes(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + BYTES_SIZE; i++) {
-			bt[index++] = bytes[i];
-		}
-		fbt = convertFloat(bt);
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.bytes)));
+		currentCursor += CpItem.bytes.size();
+
+		return currentCursor;
 	}
 
 	// TODO 要テスト・・
@@ -63,18 +66,5 @@ public class FloatInfo implements ConstantInfo {
 				: (bits & 0x7fffff) | 0x800000;
 
 		return (s * m * (2 ^ (e - 150)));
-	}
-
-	@Override
-	public CpInfoTag getTag() {
-		return CpInfoTag.Constant_Float;
-	}
-
-	@Override
-	public List<Element> getElements(byte[] tagByte) {
-		List<Element> result = new ArrayList<>();
-		result.add(new Element("u1", "tag", tagByte, getTag().name()));
-		result.add(new Element("u4", "bytes", bt));
-		return result;
 	}
 }

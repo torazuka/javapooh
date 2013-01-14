@@ -1,59 +1,44 @@
 package org.tigergrab.javapooh.cp.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.cp.CpInfoTag;
+import org.tigergrab.javapooh.cp.CpItem;
 import org.tigergrab.javapooh.view.impl.Element;
+import org.tigergrab.javapooh.view.impl.PromptView;
 
 /**
  * u1 tag; u2 class_index; u2 name_and_type_index;
  */
 public class FieldrefInfo implements ConstantInfo {
 
-	protected final int CLASS_INDEX_SIZE = 2;
-	protected final int NAME_AND_TYPE_INDEX_SIZE = 2;
+	protected final PromptView view = new PromptView();
 
-	protected byte[] classIndexByte = new byte[CLASS_INDEX_SIZE];
-	protected byte[] nameAndTypeIndexByte = new byte[NAME_AND_TYPE_INDEX_SIZE];
+	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
 
 	@Override
-	public int getMovedCursor(final int cursor) {
-		return cursor + CLASS_INDEX_SIZE + NAME_AND_TYPE_INDEX_SIZE;
-	}
-
-	@Override
-	public void getInfo(final byte[] bytes, final int cursor) {
-		getClassIndex(bytes, cursor);
-		getNameAndTypeIndex(bytes, cursor + CLASS_INDEX_SIZE);
-	}
-
-	protected void getClassIndex(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + CLASS_INDEX_SIZE; i++) {
-			classIndexByte[index++] = bytes[i];
-		}
-	}
-
-	protected void getNameAndTypeIndex(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + NAME_AND_TYPE_INDEX_SIZE; i++) {
-			nameAndTypeIndexByte[index++] = bytes[i];
-		}
+	public Element getData(final byte[] byts, final int cursor,
+			final Element ele) {
+		return defaultInfo.getData(byts, cursor, ele);
 	}
 
 	@Override
-	public CpInfoTag getTag() {
-		return CpInfoTag.Constant_Fieldref;
-	}
+	public int getContents(final byte[] bytes, final int cursor) {
+		int currentCursor = cursor;
 
-	@Override
-	public List<Element> getElements(byte[] tagByte) {
-		List<Element> result = new ArrayList<>();
-		result.add(new Element("u1", "tag", tagByte, getTag().name()));
-		result.add(new Element("u2", "class_index", classIndexByte));
-		result.add(new Element("u2", "name_and_type_index",
-				nameAndTypeIndexByte));
-		return result;
+		Element tagElement = getData(bytes, currentCursor, new Element(
+				CpItem.tag));
+		tagElement.setComment(CpInfoTag.Constant_Fieldref.name());
+		view.printElement(tagElement);
+		currentCursor += CpItem.tag.size();
+
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.class_index)));
+		currentCursor += CpItem.class_index.size();
+
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.name_and_type_index)));
+		currentCursor += CpItem.name_and_type_index.size();
+
+		return currentCursor;
 	}
 }

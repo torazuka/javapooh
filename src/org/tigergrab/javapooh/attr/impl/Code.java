@@ -3,6 +3,8 @@ package org.tigergrab.javapooh.attr.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.tigergrab.javapooh.attr.AttributeItem;
+import org.tigergrab.javapooh.attr.AttributeKind;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.method.impl.MethodInfo;

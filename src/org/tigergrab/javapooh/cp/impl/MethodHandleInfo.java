@@ -1,86 +1,44 @@
 package org.tigergrab.javapooh.cp.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tigergrab.javapooh.cp.ConstantInfo;
-import org.tigergrab.javapooh.impl.Util;
+import org.tigergrab.javapooh.cp.CpInfoTag;
+import org.tigergrab.javapooh.cp.CpItem;
 import org.tigergrab.javapooh.view.impl.Element;
+import org.tigergrab.javapooh.view.impl.PromptView;
 
 /**
  * u1 tag; u1 reference_kind; u2 reference_index;
  */
 public class MethodHandleInfo implements ConstantInfo {
 
-	protected final int REFERENCE_KIND_SIZE = 1;
-	protected final int REFERENCE_INDEX_SIZE = 2;
+	protected final PromptView view = new PromptView();
 
-	protected byte[] referenceKindByte = new byte[REFERENCE_KIND_SIZE];
-	protected byte[] referenceIndexByte = new byte[REFERENCE_INDEX_SIZE];
-
-	/**
-	 * 1-9; See
-	 * http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html#jvms
-	 * -5.4.3.5
-	 */
-	protected int referenceKind = 0;
-	protected int referenceIndex = 0;
+	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
 
 	@Override
-	public int getMovedCursor(final int cursor) {
-		return cursor + REFERENCE_KIND_SIZE + REFERENCE_INDEX_SIZE;
+	public Element getData(final byte[] byts, final int cursor,
+			final Element ele) {
+		return defaultInfo.getData(byts, cursor, ele);
 	}
 
 	@Override
-	public void getInfo(final byte[] bytes, final int cursor) {
-		getReferenceKind(bytes, cursor);
-		getReferenceKind(bytes, cursor + REFERENCE_KIND_SIZE);
+	public int getContents(final byte[] bytes, final int cursor) {
+		int currentCursor = cursor;
 
-		referenceIndex = convertReferenceKind(referenceKindByte);
-		referenceKind = convertReferenceKind(referenceIndexByte);
-	}
+		Element tagElement = getData(bytes, currentCursor, new Element(
+				CpItem.tag));
+		tagElement.setComment(CpInfoTag.Constant_MethodHandle.name());
+		view.printElement(tagElement);
+		currentCursor += CpItem.tag.size();
 
-	protected void getReferenceKind(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + REFERENCE_KIND_SIZE; i++) {
-			referenceKindByte[index++] = bytes[i];
-		}
-	}
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.reference_kind)));
+		currentCursor += CpItem.reference_kind.size();
 
-	protected void getReferenceIndex(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + REFERENCE_INDEX_SIZE; i++) {
-			referenceIndexByte[index++] = bytes[i];
-		}
-	}
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.reference_index)));
+		currentCursor += CpItem.reference_index.size();
 
-	protected int convertReferenceKind(final byte[] bytes) {
-		String str = "";
-		for (byte b : bytes) {
-			str += Util.getHexString(b);
-		}
-		return Integer.parseInt(str, 16);
-	}
-
-	protected int convertReferenceIndex(final byte[] bytes) {
-		String str = "";
-		for (byte b : bytes) {
-			str += Util.getHexString(b);
-		}
-		return Integer.parseInt(str, 16);
-	}
-
-	@Override
-	public CpInfoTag getTag() {
-		return CpInfoTag.Constant_MethodHandle;
-	}
-
-	@Override
-	public List<Element> getElements(byte[] tagByte) {
-		List<Element> result = new ArrayList<>();
-		result.add(new Element("u1", "tag", tagByte, getTag().name()));
-		result.add(new Element("u1", "reference_kind", referenceKindByte));
-		result.add(new Element("u2", "reference_index", referenceIndexByte));
-		return result;
+		return currentCursor;
 	}
 }

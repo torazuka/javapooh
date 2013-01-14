@@ -1,5 +1,6 @@
 package org.tigergrab.javapooh.attr.impl;
 
+import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;

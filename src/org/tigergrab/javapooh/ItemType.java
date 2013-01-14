@@ -1,4 +1,4 @@
-package org.tigergrab.javapooh.impl;
+package org.tigergrab.javapooh;
 
 public enum ItemType {
 	u1(1), u2(2), u4(4), array(0);

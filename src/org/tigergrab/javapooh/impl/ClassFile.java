@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tigergrab.javapooh.attr.impl.AttributeControl;
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.cp.impl.CpInfoControl;
 import org.tigergrab.javapooh.field.impl.FieldInfoControl;
 import org.tigergrab.javapooh.method.impl.MethodInfoControl;
 import org.tigergrab.javapooh.view.impl.Element;
@@ -19,17 +20,6 @@ public class ClassFile {
 	protected Map<Integer, ConstantInfo> constantPool = new HashMap<>();;
 
 	protected PromptView view = new PromptView();
-
-	public boolean checkMagic(final byte[] bytes) {
-		String magic = "";
-		for (int i = 0; i < Item.magic.size(); i++) {
-			magic += Util.getHexString(bytes[i]);
-		}
-		if (magic.equals("cafebabe")) {
-			return true;
-		}
-		return false;
-	}
 
 	public Element getData(final byte[] sourceBytes, final int cursor,
 			final Element ele) {

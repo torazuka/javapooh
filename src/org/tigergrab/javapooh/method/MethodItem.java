@@ -1,15 +1,16 @@
-package org.tigergrab.javapooh.field.impl;
+package org.tigergrab.javapooh.method;
 
-import org.tigergrab.javapooh.impl.ItemType;
+import org.tigergrab.javapooh.Item;
+import org.tigergrab.javapooh.ItemType;
 
-public enum FieldItem {
+public enum MethodItem implements Item {
 	access_flags(ItemType.u2), name_index(ItemType.u2), descriptor_index(
 			ItemType.u2), attributes_count(ItemType.u2), attributes(
 			ItemType.array);
 
 	protected ItemType type;
 
-	private FieldItem(ItemType tp) {
+	private MethodItem(ItemType tp) {
 		type = tp;
 	}
 

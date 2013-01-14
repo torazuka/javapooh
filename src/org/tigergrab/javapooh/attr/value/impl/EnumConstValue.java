@@ -1,6 +1,6 @@
 package org.tigergrab.javapooh.attr.value.impl;
 
-import org.tigergrab.javapooh.attr.impl.AttributeItem;
+import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.view.impl.Element;
 
 public class EnumConstValue extends DefaultValue {

@@ -1,6 +1,7 @@
 package org.tigergrab.javapooh.attr.impl;
 
 import org.tigergrab.javapooh.attr.AttributeInfo;
+import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.view.impl.Element;
 
 public class DefaultAttribute implements AttributeInfo {

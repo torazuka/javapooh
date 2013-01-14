@@ -1,50 +1,40 @@
 package org.tigergrab.javapooh.cp.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.cp.CpInfoTag;
+import org.tigergrab.javapooh.cp.CpItem;
 import org.tigergrab.javapooh.view.impl.Element;
+import org.tigergrab.javapooh.view.impl.PromptView;
 
 /**
  * u1 tag; u2 string_index;
  */
 public class StringInfo implements ConstantInfo {
 
-	protected final int STRING_INDEX_SIZE = 2;
+	protected final PromptView view = new PromptView();
 
-	protected byte[] stringIndexByte = new byte[STRING_INDEX_SIZE];
+	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
 
 	@Override
-	public int getMovedCursor(final int cursor) {
-		return cursor + STRING_INDEX_SIZE;
+	public Element getData(final byte[] byts, final int cursor,
+			final Element ele) {
+		return defaultInfo.getData(byts, cursor, ele);
 	}
 
 	@Override
-	public void getInfo(final byte[] bytes, final int cursor) {
-		getStringIndex(bytes, cursor);
-	}
+	public int getContents(final byte[] bytes, final int cursor) {
+		int currentCursor = cursor;
 
-	/**
-	 * u2 string_index
-	 */
-	protected void getStringIndex(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + STRING_INDEX_SIZE; i++) {
-			stringIndexByte[index++] = bytes[i];
-		}
-	}
+		Element tagElement = getData(bytes, currentCursor, new Element(
+				CpItem.tag));
+		tagElement.setComment(CpInfoTag.Constant_String.name());
+		view.printElement(tagElement);
+		currentCursor += CpItem.tag.size();
 
-	@Override
-	public CpInfoTag getTag() {
-		return CpInfoTag.Constant_String;
-	}
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.string_index)));
+		currentCursor += CpItem.string_index.size();
 
-	@Override
-	public List<Element> getElements(byte[] tagByte) {
-		List<Element> result = new ArrayList<>();
-		result.add(new Element("u1", "tag", tagByte, getTag().name()));
-		result.add(new Element("u2", "string_index", stringIndexByte));
-		return result;
+		return currentCursor;
 	}
 }

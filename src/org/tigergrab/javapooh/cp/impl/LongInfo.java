@@ -1,49 +1,46 @@
 package org.tigergrab.javapooh.cp.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.cp.CpInfoTag;
+import org.tigergrab.javapooh.cp.CpItem;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
+import org.tigergrab.javapooh.view.impl.PromptView;
 
 /**
  * u1 tag; u4 high_bytes; u4 low_bytes;
  */
 public class LongInfo implements ConstantInfo {
 
-	protected final int HIGH_BYTES_SIZE = 4;
-	protected final int LOW_BYTES_SIZE = 4;
+	protected final PromptView view = new PromptView();
 
-	protected byte[] highBytes = new byte[HIGH_BYTES_SIZE];
-	protected byte[] lowBytes = new byte[LOW_BYTES_SIZE];
-	protected long longBytes = 0L;
+	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
 
 	@Override
-	public int getMovedCursor(final int cursor) {
-		return cursor + HIGH_BYTES_SIZE + LOW_BYTES_SIZE;
+	public Element getData(final byte[] byts, final int cursor,
+			final Element ele) {
+		return defaultInfo.getData(byts, cursor, ele);
 	}
 
 	@Override
-	public void getInfo(final byte[] bytes, final int cursor) {
-		getHighBytes(bytes, cursor);
-		getLowBytes(bytes, cursor + HIGH_BYTES_SIZE);
+	public int getContents(final byte[] bytes, final int cursor) {
+		int currentCursor = cursor;
 
-		longBytes = convertBytes(highBytes, lowBytes);
-	}
+		Element tagElement = getData(bytes, currentCursor, new Element(
+				CpItem.tag));
+		tagElement.setComment(CpInfoTag.Constant_Long.name());
+		view.printElement(tagElement);
+		currentCursor += CpItem.tag.size();
 
-	protected void getHighBytes(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + HIGH_BYTES_SIZE; i++) {
-			highBytes[index++] = bytes[i];
-		}
-	}
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.high_bytes)));
+		currentCursor += CpItem.high_bytes.size();
 
-	protected void getLowBytes(final byte[] bytes, final int cursor) {
-		int index = 0;
-		for (int i = cursor; i < cursor + LOW_BYTES_SIZE; i++) {
-			lowBytes[index++] = bytes[i];
-		}
+		view.printElement(getData(bytes, currentCursor, new Element(
+				CpItem.low_bytes)));
+		currentCursor += CpItem.low_bytes.size();
+
+		return currentCursor;
 	}
 
 	// TODO 要テスト・・
@@ -61,19 +58,5 @@ public class LongInfo implements ConstantInfo {
 		long lhigh = Long.parseLong(lstr, 16);
 
 		return ((long) hhigh << 32) + lhigh;
-	}
-
-	@Override
-	public CpInfoTag getTag() {
-		return CpInfoTag.Constant_Long;
-	}
-
-	@Override
-	public List<Element> getElements(byte[] tagByte) {
-		List<Element> result = new ArrayList<>();
-		result.add(new Element("u1", "tag", tagByte, getTag().name()));
-		result.add(new Element("u4", "high_bytes", highBytes));
-		result.add(new Element("u4", "low_bytes", lowBytes));
-		return result;
 	}
 }

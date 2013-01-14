@@ -1,40 +1,66 @@
 package org.tigergrab.javapooh.cp.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.cp.CpInfoTag;
+import org.tigergrab.javapooh.cp.CpItem;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
+import org.tigergrab.javapooh.view.impl.PromptView;
 
 /**
  * u1 tag; u2 length; u1 bytes[length];
  */
 public class Utf8Info implements ConstantInfo {
 
+	protected final PromptView view = new PromptView();
+
 	protected final int LENGTH_SIZE = 2;
 	protected byte[] lengthByte = new byte[LENGTH_SIZE];
 	protected byte[] stringByte;
 
 	protected int length = -1;
+	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
 
 	@Override
-	public int getMovedCursor(final int cursor) {
-		return cursor + LENGTH_SIZE + length;
+	public Element getData(final byte[] byts, final int cursor,
+			final Element ele) {
+		return defaultInfo.getData(byts, cursor, ele);
 	}
 
 	@Override
-	public void getInfo(final byte[] bytes, final int cursor) {
-		getLength(bytes, cursor);
-		length = convertNameIndex(lengthByte);
-		getBytes(bytes, cursor + LENGTH_SIZE, length);
+	public int getContents(final byte[] bytes, final int cursor) {
+		int currentCursor = cursor;
+
+		Element tagElement = getData(bytes, currentCursor, new Element(
+				CpItem.tag));
+		tagElement.setComment(CpInfoTag.Constant_Utf8.name());
+		view.printElement(tagElement);
+		currentCursor += CpItem.tag.size();
+
+		Element lengthElement = getData(bytes, currentCursor, new Element(
+				CpItem.length));
+		view.printElement(lengthElement);
+		currentCursor += CpItem.length.size();
+
+		currentCursor = getByte(bytes, Integer.parseInt(
+				Util.byteToString(lengthElement.getBytes()), 16), currentCursor);
+
+		return currentCursor;
 	}
 
-	protected void getLength(final byte[] bytes, final int cursor) {
+	protected int getByte(final byte[] bytes, final int length, final int cursor) {
+		Element element = new Element(CpItem._byte);
+		int currentCursor = cursor;
+		byte[] bt = new byte[length];
 		int index = 0;
-		for (int i = cursor; i < cursor + LENGTH_SIZE; i++) {
-			lengthByte[index++] = bytes[i];
+		for (int i = 0; i < length; i++) {
+			bt[index++] = bytes[currentCursor];
+			currentCursor += CpItem._byte.size();
 		}
+		element.setBytes(bt);
+		stringByte = bt;
+		view.printElement(element);
+		return currentCursor;
 	}
 
 	protected void getBytes(final byte[] bytes, final int cursor, final int len) {
@@ -54,20 +80,9 @@ public class Utf8Info implements ConstantInfo {
 		return Integer.parseInt(str, 16);
 	}
 
-	@Override
-	public CpInfoTag getTag() {
-		return CpInfoTag.Constant_Utf8;
-	}
-
-	@Override
-	public List<Element> getElements(byte[] tagByte) {
-		List<Element> result = new ArrayList<>();
-		result.add(new Element("u1", "tag", tagByte, getTag().name()));
-		result.add(new Element("u2", "length", lengthByte));
-		result.add(new Element("u1", "bytes[length]", stringByte));
-		return result;
-	}
-
+	/**
+	 * for Attribute
+	 */
 	public byte[] getStringBytes() {
 		return stringByte;
 	}

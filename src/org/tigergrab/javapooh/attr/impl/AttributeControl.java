@@ -6,10 +6,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tigergrab.javapooh.ClassItem;
 import org.tigergrab.javapooh.attr.AttributeInfo;
+import org.tigergrab.javapooh.attr.AttributeKind;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.cp.impl.Utf8Info;
-import org.tigergrab.javapooh.impl.Item;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -34,11 +35,11 @@ public class AttributeControl {
 
 	public int getInfo(final int cursor) {
 		int currentCursor = cursor;
-		view.printBegin(Item.attributes.name());
+		view.printBegin(ClassItem.attributes.name());
 		int counter = 1;
 		for (;;) {
 			if (counter < attributeCount + 1) {
-				view.printCounter(counter, Item.attributes.name());
+				view.printCounter(counter, ClassItem.attributes.name());
 				AttributeKind attrKind = getAttributeNameIndex(currentCursor);
 				if (attrKind == null) {
 					logger.error("attributeの判別に失敗しました。");
@@ -50,7 +51,7 @@ public class AttributeControl {
 			}
 			break;
 		}
-		view.printEnd(Item.attributes.name());
+		view.printEnd(ClassItem.attributes.name());
 		return currentCursor;
 	}
 
