@@ -1,11 +1,13 @@
 package org.tigergrab.javapooh.attr.impl;
 
+import org.tigergrab.javapooh.attr.AttributeInfo;
 import org.tigergrab.javapooh.attr.AttributeItem;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
 
-public class Unknown extends DefaultAttribute {
+public class Unknown implements AttributeInfo {
 	private static class ParseResult {
 		final Element element;
 		final int next;
@@ -20,7 +22,9 @@ public class Unknown extends DefaultAttribute {
 
 	private ParseResult parse(final byte[] bytes, final int position,
 			final AttributeItem item) {
-		final Element element = getData(bytes, position, new Element(item));
+		ByteParser parser = new ByteParser();
+		final Element element = parser.getData(bytes, position, new Element(
+				item));
 		return new ParseResult(element, position + item.size());
 	}
 

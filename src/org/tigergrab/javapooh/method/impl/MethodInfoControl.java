@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.tigergrab.javapooh.ClassItem;
 import org.tigergrab.javapooh.cp.ConstantInfo;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.method.MethodItem;
 import org.tigergrab.javapooh.view.impl.Element;
@@ -29,14 +30,9 @@ public class MethodInfoControl {
 		view.printBegin(ClassItem.methods.name());
 		int counter = 1;
 		int currentCursor = cursor;
-		for (;;) {
-			if (counter < entryNum + 1) {
-				view.printCounter(counter, ClassItem.methods.name());
-				currentCursor = getNextMethod(fieldsBytes, currentCursor);
-				counter++;
-				continue;
-			}
-			break;
+		for (; counter < entryNum + 1; counter++) {
+			view.printCounter(counter, ClassItem.methods.name());
+			currentCursor = getNextMethod(fieldsBytes, currentCursor);
 		}
 		view.printEnd(ClassItem.methods.name());
 		return currentCursor;
@@ -44,28 +40,28 @@ public class MethodInfoControl {
 
 	protected int getNextMethod(byte[] bytes, int currentCursor) {
 		int cursor = currentCursor;
-		MethodInfo info = new MethodInfo();
+		ByteParser parser = new ByteParser();
 
-		view.printElement(info.getData(bytes, cursor, new Element(
+		view.printElement(parser.getData(bytes, cursor, new Element(
 				MethodItem.access_flags)));
 		cursor += MethodItem.access_flags.size();
 
-		view.printElement(info.getData(bytes, cursor, new Element(
+		view.printElement(parser.getData(bytes, cursor, new Element(
 				MethodItem.name_index)));
 		cursor += MethodItem.name_index.size();
 
-		view.printElement(info.getData(bytes, cursor, new Element(
+		view.printElement(parser.getData(bytes, cursor, new Element(
 				MethodItem.descriptor_index)));
 		cursor += MethodItem.descriptor_index.size();
 
-		Element attributesCountElement = info.getData(bytes, cursor,
+		Element attributesCountElement = parser.getData(bytes, cursor,
 				new Element(MethodItem.attributes_count));
 		view.printElement(attributesCountElement);
 		cursor += MethodItem.attributes_count.size();
 
-		cursor = info.getAttributes(bytes, constantPool, Integer.parseInt(
-				Util.byteToString(attributesCountElement.getBytes()), 16),
-				cursor);
+		MethodInfo info = new MethodInfo();
+		cursor = info.getAttributes(bytes, constantPool,
+				Util.byteToInt(attributesCountElement.getBytes()), cursor);
 		return cursor;
 	}
 }

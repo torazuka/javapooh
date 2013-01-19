@@ -3,6 +3,7 @@ package org.tigergrab.javapooh.cp.impl;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.cp.CpInfoTag;
 import org.tigergrab.javapooh.cp.CpItem;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -13,29 +14,23 @@ import org.tigergrab.javapooh.view.impl.PromptView;
 public class DoubleInfo implements ConstantInfo {
 
 	protected final PromptView view = new PromptView();
-	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
-
-	@Override
-	public Element getData(final byte[] byts, final int cursor,
-			final Element ele) {
-		return defaultInfo.getData(byts, cursor, ele);
-	}
 
 	@Override
 	public int getContents(final byte[] bytes, final int cursor) {
 		int currentCursor = cursor;
+		ByteParser parser = new ByteParser();
 
-		Element tagElement = getData(bytes, currentCursor, new Element(
+		Element tagElement = parser.getData(bytes, currentCursor, new Element(
 				CpItem.tag));
 		tagElement.setComment(CpInfoTag.Constant_Double.name());
 		view.printElement(tagElement);
 		currentCursor += CpItem.tag.size();
 
-		view.printElement(getData(bytes, currentCursor, new Element(
+		view.printElement(parser.getData(bytes, currentCursor, new Element(
 				CpItem.high_bytes)));
 		currentCursor += CpItem.high_bytes.size();
 
-		view.printElement(getData(bytes, currentCursor, new Element(
+		view.printElement(parser.getData(bytes, currentCursor, new Element(
 				CpItem.low_bytes)));
 		currentCursor += CpItem.low_bytes.size();
 

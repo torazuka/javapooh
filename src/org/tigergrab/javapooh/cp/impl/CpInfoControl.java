@@ -10,6 +10,7 @@ import org.tigergrab.javapooh.ClassItem;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.cp.CpInfoTag;
 import org.tigergrab.javapooh.cp.CpItem;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -73,7 +74,6 @@ public class CpInfoControl {
 		ConstantInfo info = getInfo(tag);
 		if (info != null) {
 			currentCursor = info.getContents(constantPoolByte, currentCursor);
-			// info.getInfo(constantPoolByte, currentCursor);
 		}
 		lastCursor = currentCursor;
 		lastTag = tag;
@@ -83,8 +83,8 @@ public class CpInfoControl {
 	public CpInfoTag getTag(final byte[] bytes, final int cursor) {
 		CpInfoTag result = null;
 
-		ConstantInfo info = new DefaultConstantInfo();
-		Element tagEelement = info.getData(bytes, cursor, new Element(
+		ByteParser parser = new ByteParser();
+		Element tagEelement = parser.getData(bytes, cursor, new Element(
 				CpItem.tag));
 
 		byte[] tmpBytes = tagEelement.getBytes();

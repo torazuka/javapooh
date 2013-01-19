@@ -1,32 +1,35 @@
 package org.tigergrab.javapooh.attr.impl;
 
+import org.tigergrab.javapooh.attr.AttributeInfo;
 import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.attr.AttributeKind;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
 
-public class SourceDebugExtension extends DefaultAttribute {
+public class SourceDebugExtension implements AttributeInfo {
 
 	protected final PromptView view = new PromptView();
 
 	@Override
 	public int getInfo(final byte[] bytes, final int cursor) {
 		int currentCursor = cursor;
+		ByteParser parser = new ByteParser();
 
-		Element nameIndexElement = getData(bytes, currentCursor, new Element(
-				AttributeItem.attribute_name_index));
+		Element nameIndexElement = parser.getData(bytes, currentCursor,
+				new Element(AttributeItem.attribute_name_index));
 		nameIndexElement.setComment(AttributeKind.SourceDebugExtension.name());
 		view.printElement(nameIndexElement);
 		currentCursor += AttributeItem.attribute_name_index.size();
 
-		Element attributeLengthElement = getData(bytes, currentCursor,
+		Element attributeLengthElement = parser.getData(bytes, currentCursor,
 				new Element(AttributeItem.attribute_length));
 		view.printElement(attributeLengthElement);
 		currentCursor += AttributeItem.attribute_length.size();
 
-		currentCursor = getDebugExtension(bytes, Integer.parseInt(
-				Util.byteToString(attributeLengthElement.getBytes()), 16),
+		currentCursor = getDebugExtension(bytes,
+				Util.byteToInt(attributeLengthElement.getBytes()),
 				currentCursor);
 
 		return currentCursor;

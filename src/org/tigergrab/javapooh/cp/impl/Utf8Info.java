@@ -3,6 +3,7 @@ package org.tigergrab.javapooh.cp.impl;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.cp.CpInfoTag;
 import org.tigergrab.javapooh.cp.CpItem;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -14,31 +15,21 @@ public class Utf8Info implements ConstantInfo {
 
 	protected final PromptView view = new PromptView();
 
-	protected final int LENGTH_SIZE = 2;
-	protected byte[] lengthByte = new byte[LENGTH_SIZE];
 	protected byte[] stringByte;
-
-	protected int length = -1;
-	protected final DefaultConstantInfo defaultInfo = new DefaultConstantInfo();
-
-	@Override
-	public Element getData(final byte[] byts, final int cursor,
-			final Element ele) {
-		return defaultInfo.getData(byts, cursor, ele);
-	}
 
 	@Override
 	public int getContents(final byte[] bytes, final int cursor) {
 		int currentCursor = cursor;
+		ByteParser parser = new ByteParser();
 
-		Element tagElement = getData(bytes, currentCursor, new Element(
+		Element tagElement = parser.getData(bytes, currentCursor, new Element(
 				CpItem.tag));
 		tagElement.setComment(CpInfoTag.Constant_Utf8.name());
 		view.printElement(tagElement);
 		currentCursor += CpItem.tag.size();
 
-		Element lengthElement = getData(bytes, currentCursor, new Element(
-				CpItem.length));
+		Element lengthElement = parser.getData(bytes, currentCursor,
+				new Element(CpItem.length));
 		view.printElement(lengthElement);
 		currentCursor += CpItem.length.size();
 

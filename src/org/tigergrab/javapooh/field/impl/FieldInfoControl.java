@@ -6,6 +6,7 @@ import java.util.Map;
 import org.tigergrab.javapooh.ClassItem;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.field.FieldItem;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -29,14 +30,9 @@ public class FieldInfoControl {
 		view.printBegin(ClassItem.fields.name());
 		int counter = 1;
 		int currentCursor = cursor;
-		for (;;) {
-			if (counter < entryNum + 1) {
-				view.printCounter(counter, ClassItem.fields.name());
-				currentCursor = getNextField(fieldsBytes, currentCursor);
-				counter++;
-				continue;
-			}
-			break;
+		for (; counter < entryNum + 1; counter++) {
+			view.printCounter(counter, ClassItem.fields.name());
+			currentCursor = getNextField(fieldsBytes, currentCursor);
 		}
 		view.printEnd(ClassItem.fields.name());
 		return currentCursor;
@@ -44,28 +40,28 @@ public class FieldInfoControl {
 
 	protected int getNextField(byte[] bytes, int currentCursor) {
 		int cursor = currentCursor;
-		FieldInfo info = new FieldInfo();
+		ByteParser parser = new ByteParser();
 
-		view.printElement(info.getData(bytes, cursor, new Element(
+		view.printElement(parser.getData(bytes, cursor, new Element(
 				FieldItem.access_flags)));
 		cursor += FieldItem.access_flags.size();
 
-		view.printElement(info.getData(bytes, cursor, new Element(
+		view.printElement(parser.getData(bytes, cursor, new Element(
 				FieldItem.name_index)));
 		cursor += FieldItem.name_index.size();
 
-		view.printElement(info.getData(bytes, cursor, new Element(
+		view.printElement(parser.getData(bytes, cursor, new Element(
 				FieldItem.descriptor_index)));
 		cursor += FieldItem.descriptor_index.size();
 
-		Element attributesCountElement = info.getData(bytes, cursor,
+		Element attributesCountElement = parser.getData(bytes, cursor,
 				new Element(FieldItem.attributes_count));
 		view.printElement(attributesCountElement);
 		cursor += FieldItem.attributes_count.size();
 
-		cursor = info.getAttributes(bytes, constantPool, Integer.parseInt(
-				Util.byteToString(attributesCountElement.getBytes()), 16),
-				cursor);
+		FieldInfo info = new FieldInfo();
+		cursor = info.getAttributes(bytes, constantPool,
+				Util.byteToInt(attributesCountElement.getBytes()), cursor);
 		return cursor;
 	}
 }

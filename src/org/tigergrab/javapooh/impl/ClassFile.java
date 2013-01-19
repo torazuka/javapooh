@@ -10,7 +10,6 @@ import org.tigergrab.javapooh.cp.ConstantInfo;
 import org.tigergrab.javapooh.cp.impl.CpInfoControl;
 import org.tigergrab.javapooh.field.impl.FieldInfoControl;
 import org.tigergrab.javapooh.method.impl.MethodInfoControl;
-import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
 
 public class ClassFile {
@@ -20,18 +19,6 @@ public class ClassFile {
 	protected Map<Integer, ConstantInfo> constantPool = new HashMap<>();;
 
 	protected PromptView view = new PromptView();
-
-	public Element getData(final byte[] sourceBytes, final int cursor,
-			final Element ele) {
-		Element result = new Element(ele);
-		int index = 0;
-		byte[] bt = new byte[ele.getSize()];
-		for (int i = cursor; i < cursor + ele.getSize(); i++) {
-			bt[index++] = sourceBytes[i];
-		}
-		result.setBytes(bt);
-		return result;
-	}
 
 	public int getConstantPool(final byte[] bytes, final int constantPoolCount,
 			final int cursor) {

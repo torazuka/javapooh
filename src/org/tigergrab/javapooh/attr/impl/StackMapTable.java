@@ -4,15 +4,17 @@ import java.util.EnumSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tigergrab.javapooh.attr.AttributeInfo;
 import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.attr.AttributeKind;
 import org.tigergrab.javapooh.attr.frame.FrameType;
 import org.tigergrab.javapooh.attr.frame.FrameTypeKind;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
 
-public class StackMapTable extends DefaultAttribute {
+public class StackMapTable implements AttributeInfo {
 
 	protected final PromptView view = new PromptView();
 	protected final Logger logger = LoggerFactory
@@ -21,19 +23,20 @@ public class StackMapTable extends DefaultAttribute {
 	@Override
 	public int getInfo(final byte[] bytes, final int cursor) {
 		int currentCursor = cursor;
+		ByteParser parser = new ByteParser();
 
-		Element nameIndexElement = getData(bytes, currentCursor, new Element(
-				AttributeItem.attribute_name_index));
+		Element nameIndexElement = parser.getData(bytes, currentCursor,
+				new Element(AttributeItem.attribute_name_index));
 		nameIndexElement.setComment(AttributeKind.Signature.name());
 		view.printElement(nameIndexElement);
 		currentCursor += AttributeItem.attribute_name_index.size();
 
-		view.printElement(getData(bytes, currentCursor, new Element(
+		view.printElement(parser.getData(bytes, currentCursor, new Element(
 				AttributeItem.attribute_length)));
 		currentCursor += AttributeItem.attribute_length.size();
 
-		Element numberElement = getData(bytes, currentCursor, new Element(
-				AttributeItem.number_of_entries));
+		Element numberElement = parser.getData(bytes, currentCursor,
+				new Element(AttributeItem.number_of_entries));
 		view.printElement(numberElement);
 		currentCursor += AttributeItem.number_of_entries.size();
 
@@ -54,9 +57,10 @@ public class StackMapTable extends DefaultAttribute {
 
 	protected int getStackMapFrame(final byte[] bytes, final int cursor) {
 		int currentCursor = cursor;
+		ByteParser parser = new ByteParser();
 
-		Element frameTypeElement = getData(bytes, currentCursor, new Element(
-				AttributeItem.frame_type));
+		Element frameTypeElement = parser.getData(bytes, currentCursor,
+				new Element(AttributeItem.frame_type));
 		int frameType = Util.byteToInt(frameTypeElement.getBytes());
 
 		int frameId = -1;
@@ -88,5 +92,4 @@ public class StackMapTable extends DefaultAttribute {
 		}
 		return currentCursor;
 	}
-
 }

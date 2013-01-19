@@ -37,19 +37,14 @@ public class AttributeControl {
 		int currentCursor = cursor;
 		view.printBegin(ClassItem.attributes.name());
 		int counter = 1;
-		for (;;) {
-			if (counter < attributeCount + 1) {
-				view.printCounter(counter, ClassItem.attributes.name());
-				AttributeKind attrKind = getAttributeNameIndex(currentCursor);
-				if (attrKind == null) {
-					logger.error("attributeの判別に失敗しました。");
-				}
-				AttributeInfo info = selectAttributeKind(attrKind);
-				currentCursor = info.getInfo(bytes, currentCursor);
-				counter++;
-				continue;
+		for (; counter < attributeCount + 1; counter++) {
+			view.printCounter(counter, ClassItem.attributes.name());
+			AttributeKind attrKind = getAttributeNameIndex(currentCursor);
+			if (attrKind == null) {
+				logger.error("attributeの判別に失敗しました。");
 			}
-			break;
+			AttributeInfo info = selectAttributeKind(attrKind);
+			currentCursor = info.getInfo(bytes, currentCursor);
 		}
 		view.printEnd(ClassItem.attributes.name());
 		return currentCursor;
@@ -72,7 +67,7 @@ public class AttributeControl {
 	}
 
 	protected AttributeKind getAttributeNameIndex(int cursor) {
-		DefaultAttribute attribute = new DefaultAttribute();
+		AttributeNameUtil attribute = new AttributeNameUtil();
 		Element attributeNameIndex = attribute.getAttributeNameIndex(bytes,
 				cursor);
 

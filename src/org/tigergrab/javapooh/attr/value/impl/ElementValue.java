@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import org.tigergrab.javapooh.attr.AttributeItem;
 import org.tigergrab.javapooh.attr.value.ElementValueTag;
 import org.tigergrab.javapooh.attr.value.Value;
+import org.tigergrab.javapooh.impl.ByteParser;
 import org.tigergrab.javapooh.impl.Util;
 import org.tigergrab.javapooh.view.impl.Element;
 import org.tigergrab.javapooh.view.impl.PromptView;
@@ -15,8 +16,9 @@ public class ElementValue {
 
 	public int getInfo(final byte[] bytes, final int cursor) {
 		int currentCursor = cursor;
+		ByteParser parser = new ByteParser();
 
-		Element tagElement = getData(bytes, currentCursor, new Element(
+		Element tagElement = parser.getData(bytes, currentCursor, new Element(
 				AttributeItem.tag));
 		view.printElement(tagElement);
 		currentCursor += AttributeItem.tag.size();
@@ -34,17 +36,5 @@ public class ElementValue {
 		currentCursor = val.getValue(bytes, currentCursor);
 
 		return currentCursor;
-	}
-
-	public Element getData(final byte[] sourceBytes, final int cursor,
-			final Element ele) {
-		Element result = new Element(ele);
-		int index = 0;
-		byte[] bt = new byte[ele.getSize()];
-		for (int i = cursor; i < cursor + ele.getSize(); i++) {
-			bt[index++] = sourceBytes[i];
-		}
-		result.setBytes(bt);
-		return result;
 	}
 }
