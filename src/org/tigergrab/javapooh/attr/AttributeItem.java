@@ -24,7 +24,10 @@ public enum AttributeItem implements Item {
 			ItemType.u2), class_info_index(ItemType.u2), num_value(ItemType.u2), num_parameters(
 			ItemType.u1), num_bootstrap_methods(ItemType.u2), bootstrap_method_ref(
 			ItemType.u2), num_bootstrap_arguments(ItemType.u2), bootstrap_argument(
-			ItemType.u2), local_variable_type_table_length(ItemType.u2);
+			ItemType.u2), local_variable_type_table_length(ItemType.u2), number_of_entries(
+			ItemType.u2), frame_type(ItemType.u1), offset_delta(ItemType.u2), cpool_index(
+			ItemType.u2), offset(ItemType.u2), number_of_locals(ItemType.u2), number_of_stack_items(
+			ItemType.u2);
 
 	protected ItemType type;
 

@@ -20,6 +20,7 @@ import org.tigergrab.javapooh.attr.impl.RuntimeVisibleParameterAnnotations;
 import org.tigergrab.javapooh.attr.impl.Signature;
 import org.tigergrab.javapooh.attr.impl.SourceDebugExtension;
 import org.tigergrab.javapooh.attr.impl.SourceFile;
+import org.tigergrab.javapooh.attr.impl.StackMapTable;
 import org.tigergrab.javapooh.attr.impl.Synthetic;
 import org.tigergrab.javapooh.cp.ConstantInfo;
 
@@ -36,12 +37,12 @@ public enum AttributeKind {
 			return new Code(pool);
 		}
 	},
-	/*
-	 * TODO: StackMapTable {
-	 * 
-	 * @Override public AttributeInfo make(Map<Integer, ConstantInfo> pool) {
-	 * return new StackMapTable(); } },
-	 */
+	StackMapTable {
+		@Override
+		public AttributeInfo make(Map<Integer, ConstantInfo> pool) {
+			return new StackMapTable();
+		}
+	},
 	Exceptions {
 		@Override
 		public AttributeInfo make(Map<Integer, ConstantInfo> pool) {

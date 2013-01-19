@@ -1,6 +1,11 @@
 package org.tigergrab.javapooh.impl;
 
 public class Util {
+
+	public static int byteToInt(final byte[] bytes) {
+		return Integer.parseInt(Util.byteToString(bytes), 16);
+	}
+
 	public static String getHexString(final byte b) {
 		String result = "";
 		int bt = b & 0xFF;
