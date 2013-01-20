@@ -13,7 +13,18 @@ public class ClassFileControl {
 
 	protected final PromptView view = new PromptView();
 
-	public boolean checkMagic(final byte[] bytes) {
+	public boolean checkClassFile(final byte[] bytes) {
+		ByteParser parser = new ByteParser();
+		Element magicElement = parser.getData(bytes, 0, new Element(
+				ClassItem.magic));
+		if (checkMagic(magicElement.getBytes())) {
+			return true;
+		}
+		logger.error("This is NOT a Java class file.");
+		return false;
+	}
+
+	protected boolean checkMagic(final byte[] bytes) {
 		String magic = "";
 		for (int i = 0; i < bytes.length; i++) {
 			magic += Util.getHexString(bytes[i]);
@@ -25,18 +36,18 @@ public class ClassFileControl {
 	}
 
 	public void execute(final byte[] bytes) {
+		if (checkClassFile(bytes) == false) {
+			return;
+		}
+
+		view.printBegin("ClassFile");
+
 		ByteParser parser = new ByteParser();
 		ClassFile cf = new ClassFile();
 		int cursor = 0;
 
 		Element magicElement = parser.getData(bytes, cursor, new Element(
 				ClassItem.magic));
-		if (checkMagic(magicElement.getBytes()) == false) {
-			logger.error("Javaのクラスファイルを指定してください。");
-			return;
-		}
-		view.printBegin("ClassFile");
-
 		view.printElement(magicElement);
 		cursor += ClassItem.magic.size();
 

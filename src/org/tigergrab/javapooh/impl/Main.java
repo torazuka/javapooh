@@ -4,6 +4,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +29,7 @@ public class Main {
 		String fileName = args[0];
 		File classFile = new File(fileName);
 		if (classFile.exists()) {
-			logger.info(fileName);
+			logger.info("Classfile " + fileName);
 			return classFile;
 		}
 		return null;
@@ -40,7 +45,9 @@ public class Main {
 		}
 
 		long fileSize = classFile.length();
-		logger.info("file size: " + fileSize);
+		logger.info("  Last modified " + getLastModified(classFile) + "; size "
+				+ fileSize + " bytes");
+		getMessageDigest(classFile);
 
 		byte[] bytes = new byte[(int) fileSize];
 		try (BufferedInputStream bis = new BufferedInputStream(
@@ -55,5 +62,37 @@ public class Main {
 
 		ClassFileControl control = new ClassFileControl();
 		control.execute(bytes);
+	}
+
+	protected static void getMessageDigest(File classFile) {
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			// nop
+			return;
+		}
+		try (DigestInputStream dis = new DigestInputStream(
+				new BufferedInputStream(new FileInputStream(classFile)), md);) {
+			while (dis.read() != -1) {
+			}
+			byte[] digest = md.digest();
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < digest.length; i++) {
+				sb.append(String.format("%02x", digest[i]));
+			}
+			logger.info("  MD5 checksum " + new String(sb));
+		} catch (IOException e) {
+			// nop
+			return;
+		}
+	}
+
+	protected static String getLastModified(File classFile) {
+		long lastModified = classFile.lastModified();
+		Date date = new Date(lastModified);
+		DateFormat df = DateFormat.getDateInstance();
+		return df.format(date);
 	}
 }
